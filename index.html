@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Calculá tus horas extra</title>
 <meta name="description" content="Cargá tu ingreso y egreso y calculá cuántas horas extra te corresponden, al 50% y al 100%.">
 <meta name="theme-color" content="#1D5FA8">
@@ -33,7 +35,7 @@ label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:4
 input[type=time],input[type=date],input[type=number],select{font:inherit;font-family:var(--mono);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;min-width:0;width:100%}
 select{font-family:var(--font)}
 button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--c50);outline-offset:2px}
-.row{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.row{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr))}
 .check{flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink)}
 .check input{width:18px;height:18px}
 .info{font-size:13px;color:var(--muted)} .info b{color:var(--ink)}
@@ -71,7 +73,7 @@ details ul{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;g
 .hero .go:focus-visible{outline:2px solid var(--c50);outline-offset:3px}
 .hero small{color:var(--muted);font-size:12px}
 [hidden]{display:none!important}
-@media (max-width:480px){.cards .v{font-size:21px}}
+@media (max-width:480px){.cards .v{font-size:21px}input[type=time],input[type=date],select{font-size:16px}body{font-size:16px}.hero h2{font-size:30px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -106,7 +108,7 @@ details ul{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;g
   <section class="panel">
     <p class="sect">2 · El día</p>
     <div class="row">
-      <label>Fecha<input type="date" id="fecha" value="2026-11-10"></label>
+      <label>Fecha<input type="date" id="fecha" value=""></label>
     </div>
     <label class="check" id="l-franco" hidden><input type="checkbox" id="franco"> Es día de franco</label>
     <div class="info" id="tipo"></div>
@@ -114,7 +116,7 @@ details ul{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;g
     <p class="sect" style="margin-top:4px">Horario cumplido</p>
     <div id="tramos" style="display:flex;flex-direction:column;gap:10px"></div>
     <div class="btns"><button class="btn" id="add" type="button">+ Agregar horario</button></div>
-    <p class="info" style="margin:0">¿Te fuiste y volviste más tarde? Agregá otro horario con su propia entrada y salida. Si terminaste pasada la medianoche, poné la hora del día siguiente (por ej. de 22:00 a 02:00). Los valores de arriba son un ejemplo.</p>
+    <p class="info" style="margin:0">¿Te fuiste y volviste más tarde? Agregá otro horario con su propia entrada y salida. Si terminaste pasada la medianoche, poné la hora del día siguiente (por ej. de 22:00 a 02:00).</p>
     <div class="warn" id="aviso" hidden></div>
   </section>
 
@@ -320,13 +322,13 @@ function render(){
   if(!R.P.length)tb.innerHTML='<tr><td colspan="4" style="white-space:normal;color:var(--muted)">Sin horas extra con este horario.</td></tr>';
   R.P.forEach(function(x){var t=document.createElement('tr');t.innerHTML='<td>'+x.t+'</td><td style="white-space:normal">'+x.f+' <span class="pill '+(x.k=='g'?'p50':'p100')+'">'+(x.k=='g'?'50%':'100%')+'</span></td><td class="n">'+hm(x.raw)+'</td><td class="n">'+hm(x.ok)+'</td>';tb.appendChild(t)});
   var v=$('verd'),tot=R.g+R.h;
-  if(!worked){v.className='verdict';v.textContent=''}
+  if(!worked){v.className='verdict no';v.textContent='Cargá tu hora de entrada y salida para ver el resultado.'}
   else if(!tot){v.className='verdict no';v.textContent='En este día no te corresponden horas extra.'}
   else{v.className='verdict yes';var pp=[];if(R.g)pp.push(hm(R.g)+' hs al 50%');if(R.h)pp.push(hm(R.h)+' hs al 100%');v.textContent='Te corresponden '+pp.join(' y ')+'.'}
 }
 ['prov','mod','turno','cu0','cu1','fecha','franco'].forEach(function(id){$(id).addEventListener('input',render);$(id).addEventListener('change',render)});
 
-addTramo('07:00','14:12');addTramo('16:00','19:00');
+addTramo('','');
 render();
 })();
 </script>
